@@ -26,10 +26,10 @@ import com.sina.weibo.sdk.net.WeiboParameters;
 import com.sina.weibo.sdk.utils.LogUtil;
 
 /**
- * 该类提供了好友邀请接口，支持登录用户向自己的微博互粉好友发送私信邀请、礼物。
- * 详情请参考： 
- * <li><a href="http://open.weibo.com/wiki/2/messages/invite">好友邀请接口</a>
- * <li><a href=http://t.cn/8F75vDo>申请接入流程</a>
+ * Inviatation API
+ * Refer to: 
+ * <li><a href="http://open.weibo.com/wiki/2/messages/invite">Invite API</a>
+ * <li><a href=http://t.cn/8F75vDo>Invite friends</a>
  * 
  * @author SINA
  * @since 2013-11-04
@@ -37,31 +37,40 @@ import com.sina.weibo.sdk.utils.LogUtil;
 public class InviteAPI extends AbsOpenAPI {
     private final static String TAG = InviteAPI.class.getName();
     
-    /** 邀请地址 */
+    /** API root URL */
     private final String INVITE_URL = "https://m.api.weibo.com/2/messages/invite.json";
     
-    /**（必须）要回复的私信文本内容。文本大小必须小于300个汉字 */
+    /**（Mandatory）private message. Max length is 300 Chinese Characters.*/
     public final static String KEY_TEXT = "text";
-    /**（可选）邀请点击后跳转链接。默认为当前应用地址 */
+    
+    /**（Optional）redirct URL */
     public final static String KEY_URL  = "url";
-    /**（可选）邀请 Card 展示时的图标地址，大小必须为 80px X 80px，仅支持 PNG、JPG 格式。默认为当前应用 Logo 地址 */
+    /**（Optional）Logo URL */
     public final static String KEY_INVITE_LOGO = "invite_logo";
 
     /**
-     * 构造函数。
+     * Constructs an instance of InviteAPI
      * 
-     * @param oauth2AccessToken Token 实例
+     * @param oauth2AccessToken access token
      */
     public InviteAPI(Oauth2AccessToken oauth2AccessToken) {
         super(oauth2AccessToken);
     }
     
     /**
-     * 向好友发送邀请。支持登录用户向自己的微博互粉好友发送私信邀请、礼物。
+     * send invitation.
      * 
-     * @param uid      被邀请人的 Uid，需要为当前用户互粉好友
-     * @param jsonData 邀请数据。以 {@link JSONObject} 数据填充
-     * @param listener 邀请接口对应的回调
+     * Sample of jsonData:
+     *  {
+     *      "text": "This app is great!",
+     *      "url": "http://app.sina.com.cn/appdetail.php?appID=770915",
+     *      "invite_logo": "http://hubimage.com2us.com/hubweb/contents/123_499.jpg" 
+     *  }
+     * 
+     * @param uid      user id to be invited
+     * @param jsonData invitation data {@link JSONObject} 
+     * @param listener callback listener
+     * 
      */
     public void sendInvite(String uid, JSONObject jsonData, RequestListener listener) {
         if (!TextUtils.isEmpty(uid) 

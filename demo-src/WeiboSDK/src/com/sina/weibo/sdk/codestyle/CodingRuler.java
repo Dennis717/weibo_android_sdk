@@ -9,6 +9,10 @@
 package com.sina.weibo.sdk.codestyle;
 
 /**
+ * Richard: This class is used to demonstrate code stlye of the project
+ * 
+ * https://github.com/sinaweibosdk/weibo_android_sdk
+ * 
  * 类的大体描述放在这里。
  * 
  * <p>

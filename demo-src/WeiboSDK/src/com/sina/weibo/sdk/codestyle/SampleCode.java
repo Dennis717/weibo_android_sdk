@@ -17,6 +17,8 @@
 package com.sina.weibo.sdk.codestyle;
 
 /**
+ * Richard: This class is used to demonstrate the sample code style
+ * 
  * 类的大体描述放在这里。
  *         
  * @author 作者名

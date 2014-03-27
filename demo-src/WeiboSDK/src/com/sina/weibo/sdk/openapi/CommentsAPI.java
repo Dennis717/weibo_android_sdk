@@ -23,31 +23,37 @@ import com.sina.weibo.sdk.net.RequestListener;
 import com.sina.weibo.sdk.net.WeiboParameters;
 
 /**
- * 此类封装了评论的接口。
- * 详情请参考<a href="http://t.cn/8F3geol">评论接口</a>
+ * This class wraps the comments API
+ * 
+ * Please refer to <a href="http://t.cn/8F3geol">Comments API</a>
  * 
  * @author SINA
  * @since 2014-03-03
  */
 public class CommentsAPI extends AbsOpenAPI {
 
-    /** 作者筛选类型，0：全部、1：我关注的人、2：陌生人 */
+    /** Author Type:
+     * 0:all
+     * 1:Following
+     * 2:Strangers
+     *  
+     */
     public static final int AUTHOR_FILTER_ALL        = 0;
     public static final int AUTHOR_FILTER_ATTENTIONS = 1;
     public static final int AUTHOR_FILTER_STRANGER   = 2;
 
-    /** 来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论 */
+    /** Source Type:
+     * 0:all
+     * 1:from Weibo
+     * 2:from Weibo group
+     */
     public static final int SRC_FILTER_ALL    = 0;
     public static final int SRC_FILTER_WEIBO  = 1;
     public static final int SRC_FILTER_WEIQUN = 2;
 
     /**
-     * API 类型。
-     * 命名规则：
-     *      <li>读取接口：READ_API_XXX
-     *      <li>写入接口：WRITE_API_XXX
-     * 请注意：该类中的接口仅做为演示使用，并没有包含所有关于微博的接口，第三方开发者可以
-     * 根据需要来填充该类，可参考legacy包下 {@link com.sina.weibo.sdk.openapi.legacy.CommentsAPI}
+     * APIs
+     * Refer to legacy package {@link com.sina.weibo.sdk.openapi.legacy.CommentsAPI}
      */
     private static final int READ_API_TO_ME           = 0;
     private static final int READ_API_BY_ME           = 1;
@@ -77,27 +83,27 @@ public class CommentsAPI extends AbsOpenAPI {
     }
     
     /**
-     * 构造函数，使用各个 API 接口提供的服务前必须先获取 Token。
+     * Construct an instance of CommentsAPI with accessToken
      * 
-     * @param accesssToken 访问令牌
+     * @param accesssToken access token
      */
 	public CommentsAPI(Oauth2AccessToken accessToken) {
         super(accessToken);
     }
 
     /**
-     * 根据微博ID返回某条微博的评论列表。
+     * Get comments for the weibo specifiy the id. 
      * 
-     * @param id         需要查询的微博ID。
-     * @param since_id   若指定此参数，则返回ID比since_id大的评论（即比since_id时间晚的评论），默认为0。
-     * @param max_id     若指定此参数，则返回ID小于或等于max_id的评论，默认为0。
-     * @param count      单页返回的记录条数，默认为50
-     * @param page       返回结果的页码，默认为1。
-     * @param authorType 作者筛选类型，0：全部、1：我关注的人、2：陌生人 ,默认为0。可为以下几种 :
+     * @param id         weibo id
+     * @param since_id   comment id, if specified, returns the comments newer than this one, default is 0
+     * @param max_id     comment id, if specified, returns the comments older than this one. default is 0
+     * @param count      max count of comments in one page. default is 50
+     * @param page       page number, default is 1
+     * @param authorType author type, default is 0
      *                   <li>{@link #AUTHOR_FILTER_ALL}
      *                   <li>{@link #AUTHOR_FILTER_ATTENTIONS}
      *                   <li>{@link #AUTHOR_FILTER_STRANGER}
-     * @param listener   异步请求回调接口
+     * @param listener   callback listener
      */
     public void show(long id, long since_id, long max_id, int count, int page, int authorType, RequestListener listener) {
         WeiboParameters params = buildTimeLineParamsBase(since_id, max_id, count, page);
@@ -107,17 +113,17 @@ public class CommentsAPI extends AbsOpenAPI {
     }
     
     /**
-     * 获取当前登录用户所发出的评论列表。
+     * Get comments posted by current user.
      * 
-     * @param since_id   若指定此参数，则返回ID比since_id大的评论（即比since_id时间晚的评论），默认为0。
-     * @param max_id     若指定此参数，则返回ID小于或等于max_id的评论，默认为0。
-     * @param count      单页返回的记录条数，默认为50。
-     * @param page       返回结果的页码，默认为1。
-     * @param sourceType 来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。
+     * @param since_id   comment id, if specified, returns the comments newer than this one, default is 0
+     * @param max_id     comment id, if specified, returns the comments older than this one. default is 0
+     * @param count      max count of comments in one page. default is 50
+     * @param page       page number, default is 1
+     * @param sourceType source type, default is 0
      *                   <li>{@link #SRC_FILTER_ALL}
      *                   <li>{@link #SRC_FILTER_WEIBO}
      *                   <li>{@link #SRC_FILTER_WEIQUN} 
-     * @param listener   异步请求回调接口
+     * @param listener   callback listener
      */
     public void byME(long since_id, long max_id, int count, int page, int sourceType, RequestListener listener) {
         WeiboParameters params = buildTimeLineParamsBase(since_id, max_id, count, page);
@@ -126,21 +132,21 @@ public class CommentsAPI extends AbsOpenAPI {
     }
     
     /**
-     * 获取当前登录用户所接收到的评论列表。
+     * Get comments to current user
      * 
-     * @param since_id   若指定此参数，则返回ID比since_id大的评论（即比since_id时间晚的评论），默认为0。
-     * @param max_id     若指定此参数，则返回ID小于或等于max_id的评论，默认为0。
-     * @param count      单页返回的记录条数，默认为50。
-     * @param page       返回结果的页码，默认为1。
-     * @param authorType 作者筛选类型，0：全部、1：我关注的人、2：陌生人 ,默认为0。可为以下几种 :
+     * @param since_id   comment id, if specified, returns the comments newer than this one, default is 0
+     * @param max_id     comment id, if specified, returns the comments older than this one. default is 0
+     * @param count      max count of comments in one page. default is 50
+     * @param page       page number, default is 1
+     * @param authorType author type, default is 0
      *                   <li>{@link #AUTHOR_FILTER_ALL}
      *                   <li>{@link #AUTHOR_FILTER_ATTENTIONS}
      *                   <li>{@link #AUTHOR_FILTER_STRANGER}
-     * @param sourceType 来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。
+     * @param sourceType source type, default is 0
      *                   <li>{@link #SRC_FILTER_ALL}
      *                   <li>{@link #SRC_FILTER_WEIBO}
      *                   <li>{@link #SRC_FILTER_WEIQUN}
-     * @param listener   异步请求回调接口
+     * @param listener   callback listener
      */
     public void toME(long since_id, long max_id, int count, int page, int authorType, int sourceType,
             RequestListener listener) {
@@ -151,14 +157,14 @@ public class CommentsAPI extends AbsOpenAPI {
     }
 
     /**
-     * 获取当前登录用户的最新评论包括接收到的与发出的。
+     * Get all comments, including both posted or received.
      * 
-     * @param since_id  若指定此参数，则返回ID比since_id大的评论（即比since_id时间晚的评论），默认为0。
-     * @param max_id    若指定此参数，则返回ID小于或等于max_id的评论，默认为0。
-     * @param count     单页返回的记录条数，默认为50。
-     * @param page      返回结果的页码，默认为1。
-     * @param trim_user 返回值中user字段开关，false：返回完整user字段、true：user字段仅返回user_id，默认为false。
-     * @param listener  异步请求回调接口
+     * @param since_id   comment id, if specified, returns the comments newer than this one, default is 0
+     * @param max_id     comment id, if specified, returns the comments older than this one. default is 0
+     * @param count      max count of comments in one page. default is 50
+     * @param page       page number, default is 1
+     * @param trim_user  determine if return full user info. Return full user info if false, otherwise, only return user id. Default is false
+     * @param listener   callback listener
      */
     public void timeline(long since_id, long max_id, int count, int page, boolean trim_user, RequestListener listener) {
         WeiboParameters params = buildTimeLineParamsBase(since_id, max_id, count, page);
@@ -167,21 +173,21 @@ public class CommentsAPI extends AbsOpenAPI {
     }
 
     /**
-     * 获取最新的提到当前登录用户的评论，即@我的评论 若指定此参数，则返回ID比since_id大的评论（即比since_id时间晚的评论），默认为0
+     * Get comment, which mention (@) current user.
      * 
-     * @param since_id   若指定此参数，则返回ID小于或等于max_id的评论，默认为0
-     * @param max_id     若指定此参数，则返回ID小于或等于max_id的评论，默认为0
-     * @param count      单页返回的记录条数，默认为50
-     * @param page       返回结果的页码，默认为1
-     * @param authorType 作者筛选类型，0：全部，1：我关注的人， 2：陌生人，默认为0
+     * @param since_id   comment id, if specified, returns the comments newer than this one, default is 0
+     * @param max_id     comment id, if specified, returns the comments older than this one. default is 0
+     * @param count      max count of comments in one page. default is 50
+     * @param page       page number, default is 1
+     * @param authorType Author type, default is 0
      *                   <li> {@link #AUTHOR_FILTER_ALL}
      *                   <li> {@link #AUTHOR_FILTER_ATTENTIONS}
      *                   <li> {@link #AUTHOR_FILTER_STRANGER}
-     *@param sourceType  来源筛选类型，0：全部，1：来自微博的评论，2：来自微群的评论，默认为0
+     *@param sourceType  Source type, default is 0
      *                   <li> {@link #SRC_FILTER_ALL}
      *                   <li> {@link #SRC_FILTER_WEIBO}
      *                   <li> {@link #SRC_FILTER_WEIQUN}
-     * @param listener   异步请求回调接口
+     * @param listener   callback listener
      */
     public void mentions(long since_id, long max_id, int count, int page, int authorType, int sourceType,
             RequestListener listener) {
@@ -192,10 +198,10 @@ public class CommentsAPI extends AbsOpenAPI {
     }
     
     /**
-     * 根据评论ID批量返回评论信息。
+     * Get comments information in batch.
      * 
-     * @param cids      需要查询的批量评论ID数组，最大50
-     * @param listener  异步请求回调接口
+     * @param cids      Array of comments id. max lenth is 50
+     * @param listener  callback listener
      */
     public void showBatch(long[] cids, RequestListener listener) {
         WeiboParameters params = buildShowOrDestoryBatchParams(cids);
@@ -203,12 +209,12 @@ public class CommentsAPI extends AbsOpenAPI {
     }
     
     /**
-     * 对一条微博进行评论。
+     * Comments to one Weibo specified by id
      * 
-     * @param comment     评论内容，内容不超过140个汉字。
-     * @param id          需要评论的微博ID。
-     * @param comment_ori 当评论转发微博时，是否评论给原微博
-     * @param listener    异步请求回调接口
+     * @param comment     comment content
+     * @param id          weibo id
+     * @param comment_ori specify if comment to the original weibo.
+     * @param listener    callback listener
      */
     public void create(String comment, long id, boolean comment_ori, RequestListener listener) {
         WeiboParameters params = buildCreateParams(comment, id, comment_ori);
@@ -216,10 +222,10 @@ public class CommentsAPI extends AbsOpenAPI {
     }
     
     /**
-     * 删除一条评论。
+     * Remove a comment specified by id
      * 
-     * @param cid      要删除的评论ID，只能删除登录用户自己发布的评论。
-     * @param listener 异步请求回调接口
+     * @param cid      comment id to be removed
+     * @param listener callback listener
      */
     public void destroy(long cid, RequestListener listener) {
         WeiboParameters params = new WeiboParameters();
@@ -228,10 +234,10 @@ public class CommentsAPI extends AbsOpenAPI {
     }
     
     /**
-     * 根据评论ID批量删除评论。
+     * Remove comments in batch.
      * 
-     * @param ids      需要删除的评论ID数组，最多20个。
-     * @param listener 异步请求回调接口
+     * @param ids      Array of comment ids. max length is 20
+     * @param listener callback listener
      */
     public void destroyBatch(long[] ids, RequestListener listener) {
         WeiboParameters params = buildShowOrDestoryBatchParams(ids);
@@ -239,14 +245,14 @@ public class CommentsAPI extends AbsOpenAPI {
     }
     
     /**
-     * 回复一条评论。
+     * Reply to one comment
      * 
-     * @param cid             需要回复的评论ID
-     * @param id              需要评论的微博ID
-     * @param comment         回复评论内容，内容不超过140个汉字
-     * @param without_mention 回复中是否自动加入“回复@用户名”，true：是、false：否，默认为false
-     * @param comment_ori     当评论转发微博时，是否评论给原微博，false：否、true：是，默认为false
-     * @param listener        异步请求回调接口
+     * @param cid             comment id to reply
+     * @param id              weibo id
+     * @param comment         comment content
+     * @param without_mention determine if add @username in reply automatically. true - add, false - not add
+     * @param comment_ori     determine if comment to the original weibo. true - comments to orginal.
+     * @param listener        callback listener
      */
     public void reply(long cid, long id, String comment, boolean without_mention, boolean comment_ori,
             RequestListener listener) {
@@ -256,7 +262,7 @@ public class CommentsAPI extends AbsOpenAPI {
     
     /**
      * -----------------------------------------------------------------------
-     * 请注意：以下方法匀均同步方法。如果开发者有自己的异步请求机制，请使用该函数。
+     * Notice: methods below are synchronized
      * -----------------------------------------------------------------------
      */
     
@@ -350,7 +356,7 @@ public class CommentsAPI extends AbsOpenAPI {
     }
 
     /** 
-     * 组装TimeLines的参数
+     * build TimeLines paramters
      */
     private WeiboParameters buildTimeLineParamsBase(long since_id, long max_id, int count, int page) {
         WeiboParameters params = new WeiboParameters();

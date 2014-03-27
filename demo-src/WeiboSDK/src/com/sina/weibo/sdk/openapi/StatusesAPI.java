@@ -25,32 +25,45 @@ import com.sina.weibo.sdk.net.RequestListener;
 import com.sina.weibo.sdk.net.WeiboParameters;
 
 /**
- * 该类封装了微博接口。
- * 详情请参考<a href="http://t.cn/8F3e7SE">微博接口</a>
+ * Weibo APIs
+ * Refer to: <a href="http://t.cn/8F3e7SE">Weibo APIs</a>
  * 
  * @author SINA
  * @since 2014-03-03
  */
 public class StatusesAPI extends AbsOpenAPI {
     
-    /** 过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐 */
+    /** Weibo type，
+     * 0:all
+     * 1:original
+     * 2:image
+     * 3:video
+     * 4:music
+     * */
     public static final int FEATURE_ALL      = 0;
     public static final int FEATURE_ORIGINAL = 1;
     public static final int FEATURE_PICTURE  = 2;
     public static final int FEATURE_VIDEO    = 3;
     public static final int FEATURE_MUSICE   = 4;
     
-    /** 作者筛选类型，0：全部、1：我关注的人、2：陌生人 */
+    /** Author Type
+     * 0:all
+     * 1:Following
+     * 2:Stranger 
+     */
     public static final int AUTHOR_FILTER_ALL        = 0;
     public static final int AUTHOR_FILTER_ATTENTIONS = 1;
     public static final int AUTHOR_FILTER_STRANGER   = 2;
     
-    /** 来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论 */
+    /** Source Type
+     * 0: all
+     * 1: comments from weibo
+     * 2:comments from weibo group 
+     * */
     public static final int SRC_FILTER_ALL      = 0;
     public static final int SRC_FILTER_WEIBO    = 1;
     public static final int SRC_FILTER_WEIQUN   = 2;
     
-    /** 原创筛选类型，0：全部微博、1：原创的微博。  */
     public static final int TYPE_FILTER_ALL     = 0;
     public static final int TYPE_FILTER_ORIGAL  = 1;    
 
@@ -58,12 +71,12 @@ public class StatusesAPI extends AbsOpenAPI {
     private static final String API_BASE_URL = API_SERVER + "/statuses";
 
     /**
-     * API 类型。
-     * 命名规则：
-     *      <li>读取接口：READ_API_XXX
-     *      <li>写入接口：WRITE_API_XXX
-     * 请注意：该类中的接口仅做为演示使用，并没有包含所有关于微博的接口，第三方开发者可以
-     * 根据需要来填充该类，可参考legacy包下 {@link com.sina.weibo.sdk.openapi.legacy.StatusesAPI}
+     * APIs
+     * 
+     * Notice: This class does not include all Webio Status APIs, developers may extend
+     * this class to implement other APIs
+     * 
+     * Refer to {@link com.sina.weibo.sdk.openapi.legacy.StatusesAPI}
      */
     private static final int READ_API_FRIENDS_TIMELINE = 0;
     private static final int READ_API_MENTIONS         = 1;    
@@ -83,30 +96,38 @@ public class StatusesAPI extends AbsOpenAPI {
     }
 
     /**
-     * 构造函数，使用各个 API 接口提供的服务前必须先获取 Token。
+     * Constructs an instance of StatusesAPI with the specified accessToken
      * 
-     * @param accesssToken 访问令牌
+     * @param accesssToken access token
      */
     public StatusesAPI(Oauth2AccessToken accessToken) {
         super(accessToken);
     }
     
     /**
-     * 获取当前登录用户及其所关注用户的最新微博。
+     * Get Weibo (status) of current user and of his/her followings
      * 
-     * @param since_id    若指定此参数，则返回ID比since_id大的微博（即比since_id时间晚的微博），默认为0
-     * @param max_id      若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
-     * @param count       单页返回的记录条数，默认为50。
-     * @param page        返回结果的页码，默认为1。
-     * @param base_app    是否只获取当前应用的数据。false为否（所有数据），true为是（仅当前应用），默认为false。
-     * @param featureType 过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。
+     * @param since_id    Weibo id, if specified, only return Weibo later than this one. Default is 0. 
+     * @param max_id      Weibo id, if specified, only return Weibo older than this one. Default is 0. 
+     * @param count       the max number of Weibo returned in one page. Default is 50.
+     * @param page        Page number, Default is 1
+     * @param base_app    Determine if only returns the Weibo from this app。false- all，true - Weibo posted from this app,
+     *                    Default is false.
+     * @param featureType Filter type，
+     *                      0: all (Default)
+     *                      1: Original
+     *                      2: Images
+     *                      3: Video
+     *                      4: Music
+     *                      
      *                    <li>{@link #FEATURE_ALL}
      *                    <li>{@link #FEATURE_ORIGINAL}
      *                    <li>{@link #FEATURE_PICTURE}
      *                    <li>{@link #FEATURE_VIDEO}
      *                    <li>{@link #FEATURE_MUSICE}
-     * @param trim_user   返回值中user字段开关，false：返回完整user字段、true：user字段仅返回user_id，默认为false。
-     * @param listener    异步请求回调接口
+     * @param trim_user   Determine if returns detail user information，false: returns detail user information,
+     *                    true: only returns user_id. Default is false。
+     * @param listener    callback listener
      */
     public void friendsTimeline(long since_id, long max_id, int count, int page, boolean base_app,
             int featureType, boolean trim_user, RequestListener listener) {
@@ -116,25 +137,36 @@ public class StatusesAPI extends AbsOpenAPI {
     }    
     
     /**
-     * 获取最新的提到登录用户的微博列表，即@我的微博。
+     * Get Weibo metioned current user. @CurrentUser
      * 
-     * @param since_id      若指定此参数，则返回ID比since_id大的微博（即比since_id时间晚的微博），默认为0。
-     * @param max_id        若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
-     * @param count         单页返回的记录条数，默认为50。
-     * @param page          返回结果的页码，默认为1。
-     * @param authorType    作者筛选类型，0：全部、1：我关注的人、2：陌生人 ,默认为0。可为以下几种 :
+     * @param since_id      Weibo id, if specified, only return Weibo later than this one. Default is 0.
+     * @param max_id        Weibo id, if specified, only return Weibo older than this one. Default is 0.
+     * @param count         The max number of Weibo returned in one page. Default is 50.
+     * @param page          Page number, Default is 1
+     * @param authorType    Author type，
+     *                      0: all
+     *                      1: My followings
+     *                      2: Strangers
+     *                      Default is 0, Refer to:
      *                      <li>{@link #AUTHOR_FILTER_ALL}
      *                      <li>{@link #AUTHOR_FILTER_ATTENTIONS}
      *                      <li>{@link #AUTHOR_FILTER_STRANGER}
-     * @param sourceType    来源筛选类型，0：全部、1：来自微博的评论、2：来自微群的评论，默认为0。可为以下几种 :
+     * @param sourceType    Source type，
+     *                      0: all (Default)
+     *                      1: Comments from Weibo
+     *                      2: Comments from Weibo group
+     *                      
      *                      <li>{@link #SRC_FILTER_ALL}
      *                      <li>{@link #SRC_FILTER_WEIBO}
      *                      <li>{@link #SRC_FILTER_WEIQUN}
-     * @param filterType    原创筛选类型，0：全部微博、1：原创的微博，默认为0。 可为以下几种 :
+     * @param filterType    filter type，
+     *                      0: all (Default)
+     *                      1: Original
      *                      <li>{@link #TYPE_FILTER_ALL}
      *                      <li>{@link #TYPE_FILTER_ORIGAL}
-     * @param trim_user     返回值中user字段开关，false：返回完整user字段、true：user字段仅返回user_id，默认为false
-     * @param listener      异步请求回调接口
+     * @param trim_user     Determine if returns detail user information，false: returns detail user information,
+     *                      true: only returns user_id. Default is false。
+     * @param listener      callback listener
      */
     public void mentions(long since_id, long max_id, int count, int page, int authorType, int sourceType,
             int filterType, boolean trim_user, RequestListener listener) {
@@ -143,12 +175,12 @@ public class StatusesAPI extends AbsOpenAPI {
     }
     
     /**
-     * 发布一条新微博（连续两次发布的微博不可以重复）。
+     * Post a new Weibo (two successive Weibo cannot be same)
      * 
-     * @param content  要发布的微博文本内容，内容不超过140个汉字。
-     * @param lat      纬度，有效范围：-90.0到+90.0，+表示北纬，默认为0.0。
-     * @param lon      经度，有效范围：-180.0到+180.0，+表示东经，默认为0.0。
-     * @param listener 异步请求回调接口
+     * @param content  Weibo content, max length is 140 Chinese Characters
+     * @param lat      latitude，Valid Range [-90.0, 90.0]，+ means north latitude, Default is 0.0
+     * @param lon      longitude，Valid Range[-180.0, +180.0]，+ means east longitude, Default is 0.0
+     * @param listener callback
      */
     public void update(String content, String lat, String lon, RequestListener listener) {
         WeiboParameters params = buildUpdateParams(content, lat, lon);
@@ -156,13 +188,13 @@ public class StatusesAPI extends AbsOpenAPI {
     }
     
     /**
-     * 上传图片并发布一条新微博。
+     * Post a Weibo with an image
      * 
-     * @param content  要发布的微博文本内容，内容不超过140个汉字
-     * @param bitmap   要上传的图片，仅支持JPEG、GIF、PNG格式，图片大小小于5M
-     * @param lat      纬度，有效范围：-90.0到+90.0，+表示北纬，默认为0.0。
-     * @param lon      经度，有效范围：-180.0到+180.0，+表示东经，默认为0.0。
-     * @param listener 异步请求回调接口
+     * @param content  Weibo content, max length is 140 Chinese Characters
+     * @param bitmap   Bitmap, only support JPEG、GIF、PNG formats，max size is 5MB
+     * @param lat      latitude，Valid Range [-90.0, 90.0]，+ means north latitude, Default is 0.0
+     * @param lon      longitude，Valid Range[-180.0, +180.0]，+ means east longitude, Default is 0.0
+     * @param listener callback
      */
     public void upload(String content, Bitmap bitmap, String lat, String lon, RequestListener listener) {
         WeiboParameters params = buildUpdateParams(content, lat, lon);
@@ -171,16 +203,17 @@ public class StatusesAPI extends AbsOpenAPI {
     }
     
     /**
-     * 指定一个图片URL地址抓取后上传并同时发布一条新微博，此方法会处理URLencod。
+     * Post a Weibo with an image specified by a http URL, or pic_id
      * 
-     * @param status   要发布的微博文本内容，内容不超过140个汉字。
-     * @param imageUrl 图片的URL地址，必须以http开头。
-     * @param pic_id   已经上传的图片pid，多个时使用英文半角逗号符分隔，最多不超过九张。 
-     *                 imageUrl 和 pic_id必选一个，两个参数都存在时，取picid参数的值为准。
-     *                 <b>注：目前该参数不可用，现在还只能通过BD合作接入，不对个人申请</b>
-     * @param lat      纬度，有效范围：-90.0到+90.0，+表示北纬，默认为0.0。
-     * @param lon      经度，有效范围：-180.0到+180.0，+表示东经，默认为0.0。
-     * @param listener 异步请求回调接口
+     * @param status   Weibo content, max length is 140 Chinese Characters
+     * @param imageUrl URL to the image, should start with "http"
+     * @param pic_id   id of the uploaded image (multiple ids saprated by comma, max length is 9).
+     *                 Either imageUrl or pic_id should be specified, if both present, pic_id is used. 
+     *                 
+     *                 <b>Notice: This param cannot be used by individual developers</b>
+     * @param lat      latitude，Valid Range [-90.0, 90.0]，+ means north latitude, Default is 0.0
+     * @param lon      longitude，Valid Range[-180.0, +180.0]，+ means east longitude, Default is 0.0
+     * @param listener callback
      */
     public void uploadUrlText(String status, String imageUrl, String pic_id, String lat, String lon,
             RequestListener listener) {
@@ -202,7 +235,7 @@ public class StatusesAPI extends AbsOpenAPI {
 
     /**
      * -----------------------------------------------------------------------
-     * 请注意：以下方法匀均同步方法。如果开发者有自己的异步请求机制，请使用该函数。
+     * APIs below are synchronized methods
      * -----------------------------------------------------------------------
      */
     
@@ -242,7 +275,7 @@ public class StatusesAPI extends AbsOpenAPI {
         return requestSync(sAPIList.get(WRITE_API_UPLOAD_URL_TEXT), params, HTTPMETHOD_POST);
     }
 
-    // 组装TimeLines的参数
+    // build params for TimeLines
     private WeiboParameters buildTimeLineParamsBase(long since_id, long max_id, int count, int page,
             boolean base_app, boolean trim_user, int featureType) {
         WeiboParameters params = new WeiboParameters();
@@ -256,7 +289,7 @@ public class StatusesAPI extends AbsOpenAPI {
         return params;
     }
 
-    // 组装微博请求参数
+    // build params for Weibo request
     private WeiboParameters buildUpdateParams(String content, String lat, String lon) {
         WeiboParameters params = new WeiboParameters();
         params.put("status", content);

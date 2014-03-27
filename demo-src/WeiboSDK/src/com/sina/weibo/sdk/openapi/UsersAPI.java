@@ -23,8 +23,9 @@ import com.sina.weibo.sdk.net.RequestListener;
 import com.sina.weibo.sdk.net.WeiboParameters;
 
 /**
- * 该类封装了用户接口。
- * 详情请参考<a href="http://t.cn/8F1n1eF">用户接口</a>
+ * Class UsesAPI to access user information
+ * 
+ * Refer to<a href="http://t.cn/8F1n1eF">User API</a>
  * 
  * @author SINA
  * @since 2014-03-03
@@ -49,10 +50,10 @@ public class UsersAPI extends AbsOpenAPI {
     }
 
     /**
-     * 根据用户ID获取用户信息。
+     * Get information for the user specified by uid
      * 
-     * @param uid      需要查询的用户ID
-     * @param listener 异步请求回调接口
+     * @param uid      user id
+     * @param listener callback
      */
     public void show(long uid, RequestListener listener) {
         WeiboParameters params = new WeiboParameters();
@@ -61,10 +62,10 @@ public class UsersAPI extends AbsOpenAPI {
     }
     
     /**
-     * 根据用户昵称获取用户信息。
+     * Get information for the user specified by screen_namn (nick name)
      * 
-     * @param screen_name 需要查询的用户昵称
-     * @param listener    异步请求回调接口
+     * @param screen_name screen name
+     * @param listener    callback
      */
     public void show(String screen_name, RequestListener listener) {
         WeiboParameters params = new WeiboParameters();
@@ -73,10 +74,10 @@ public class UsersAPI extends AbsOpenAPI {
     }
     
     /**
-     * 通过个性化域名获取用户资料以及用户最新的一条微博。
+     * Get user information and the latest Weibo through personal domain name
      * 
-     * @param domain   需要查询的个性化域名（请注意：是http://weibo.com/xxx后面的xxx部分）
-     * @param listener 异步请求回调接口
+     * @param domain   domain（It's not the full URL, only the "xxx" in http://weibo.com/xxx）
+     * @param listener callback
      */
     public void domainShow(String domain, RequestListener listener) {
         WeiboParameters params = new WeiboParameters();
@@ -85,10 +86,10 @@ public class UsersAPI extends AbsOpenAPI {
     }
     
     /**
-     * 批量获取用户的粉丝数、关注数、微博数。
+     * Get the nubmer of followers, followings, and Weibo for users in batch.
      * 
-     * @param uids     需要获取数据的用户UID，多个之间用逗号分隔，最多不超过100个
-     * @param listener 异步请求回调接口
+     * @param uids     uid, multiple uid saparted by comma (,), max length is 100
+     * @param listener callback
      */
     public void counts(long[] uids, RequestListener listener) {
         WeiboParameters params = buildCountsParams(uids);
@@ -97,7 +98,7 @@ public class UsersAPI extends AbsOpenAPI {
     
     /**
      * -----------------------------------------------------------------------
-     * 请注意：以下方法匀均同步方法。如果开发者有自己的异步请求机制，请使用该函数。
+     * Notice: APIs below are synchronized methods
      * -----------------------------------------------------------------------
      */
     
